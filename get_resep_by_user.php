@@ -14,6 +14,7 @@ if (isset($_GET['id_user'])) {
                 r.steps,
                 r.image_url,
                 r.created_at,
+                r.status,
                 u.name AS user_name
             FROM 
                 resep r

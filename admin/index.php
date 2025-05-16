@@ -48,6 +48,11 @@
         margin-bottom: 10px;
         font-size: 15px;
       }
+      .table td {
+        word-wrap: break-word;
+        white-space: normal;
+        vertical-align: top;
+      }
 
       .sidebar a:hover {
         background-color: #e3e3e3;
@@ -71,44 +76,55 @@
           <a href="index.php"><i class="bi bi-arrow-repeat"></i> Pending Resep</a>
           <a href="resep.php"><i class="bi bi-book"></i> Resep</a>
 
-          <a href="#"><i class="bi bi-door-open"></i>Logout</a>
+          <!-- <a href="#"><i class="bi bi-door-open"></i>Logout</a> -->
         </div>
 
         <!-- Main Content -->
-        <div class="col-md-9 col-lg-10 content">
-          <h2 class="mb-4">Data Resep</h2>
+        <div class="col-md-9 col-lg-10 content ">
+          <h2 class="mb-4">Pending Resep</h2>
 
           <!-- Tabel Data -->
-           <p>ini index</p>
           <div class="table-responsive">
             <table class="table table-bordered table-striped table-hover " style="font-size: 13px;">
               <thead style="text-align: center">
                 <tr>
                   <th>No</th>
+                  <th>Image</th>
                   <th>Title</th>
                   <th>Ingredients</th>
                   <th style="max-width:100px;">Steps</th>
-                  <th>Image</th>
                   <th>Status</th>
+                  <th>action</th>
+
                 </tr>
               </thead>
               <tbody>
                   <?php
                   include('../config.php');
                   $no = 1;
-                  $query = "SELECT * FROM resep ORDER BY created_at DESC";
+                  $query = "SELECT * FROM resep WHERE status=0 ORDER BY created_at DESC";
                   $result = mysqli_query($conn, $query);
 
                   while ($row = mysqli_fetch_assoc($result)) {
                   ?>
                     <td  ><?= $no++; ?></td>
+                       <td>
+                        <img src="<?= htmlspecialchars('http://192.168.163.118/api-resep/' . $row['image_url']); ?>" alt="<?= htmlspecialchars($row['title']); ?>" class="img-fluid" style="max-width: 150px; height: 150px; object-fit: contain;" />
+                      </td>
                     <td><?= htmlspecialchars($row['title']); ?></td>
-                    <td><?= nl2br(htmlspecialchars($row['ingredients'])); ?></td>
-                    <td style="max-width: 200px;"><?= nl2br(htmlspecialchars($row['steps'])); ?></td>
+                    <td style="max-width: 200px; word-wrap: break-word; white-space: normal;"><?= nl2br(htmlspecialchars($row['ingredients'])); ?></td>
+                    <td style="max-width: 200px; word-wrap: break-word; white-space: normal;"><?= nl2br(htmlspecialchars($row['steps'])); ?></td>
+                 
+                    <td>Pending / draft</td>
                     <td>
-                      <img src="<?= htmlspecialchars($row['image_url']); ?>" alt="<?= htmlspecialchars($row['title']); ?>" class="img-fluid" style="max-width: 100px; height: auto;" />
-                    </td>
-                    <td><?= htmlspecialchars($row['status']); ?></td>
+                      <a href="approve.php?id=<?= $row['id']; ?>" 
+                        class="btn btn-success btn-sm" 
+                        onclick="return confirm('Apakah Anda yakin ingin menyetujui item ini?');">
+                        approved
+                      </a>
+                      <a href="delete.php?id=<?= $row['id']; ?>" class="btn btn-danger btn-sm" 
+                        onclick="return confirm('Apakah Anda yakin ingin menolak resep ini?');">reject
+                      </a>                    
                   </tr>
                   <?php
                   }

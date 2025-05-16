@@ -19,7 +19,7 @@ if (!isset($_GET['id']) || empty($_GET['id'])) {
 $id = intval($_GET['id']); // Pastikan ID adalah angka untuk keamanan
 
 // Ambil data pengguna berdasarkan ID
-$sql = "SELECT id, name, username, phonenumber, email FROM user WHERE id = ?";
+$sql = "SELECT id, name, username, phonenumber, email, image_url FROM user WHERE id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $id);
 $stmt->execute();
