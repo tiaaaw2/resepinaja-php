@@ -1,24 +1,20 @@
 <?php
 header("Content-Type: application/json");
-require "config.php"; // File koneksi database
+require "config.php"; 
 
-// Pastikan metode yang digunakan adalah GET
 if ($_SERVER["REQUEST_METHOD"] !== "GET") {
     http_response_code(405);
     echo json_encode(["status" => "error", "message" => "Invalid request method"]);
     exit;
 }
-
-// Pastikan ada parameter "id" di URL
 if (!isset($_GET['id']) || empty($_GET['id'])) {
     http_response_code(400);
     echo json_encode(["status" => "error", "message" => "User ID is required"]);
     exit;
 }
 
-$id = intval($_GET['id']); // Pastikan ID adalah angka untuk keamanan
+$id = intval($_GET['id']); 
 
-// Ambil data pengguna berdasarkan ID
 $sql = "SELECT id, name, username, phonenumber, email, image_url FROM user WHERE id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $id);

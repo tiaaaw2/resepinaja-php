@@ -2,9 +2,8 @@
 header("Content-Type: application/json");
 require "config.php";
 
-// Cek apakah parameter id_user diberikan
 if (isset($_GET['id_user'])) {
-    $id_user = intval($_GET['id_user']); // Sanitasi input
+    $id_user = intval($_GET['id_user']); 
 
     $sql = "SELECT 
                 r.id,

@@ -2,21 +2,20 @@
 header("Content-Type: application/json");
 require "config.php";
 
-// Function to handle image upload
 function uploadImage($image) {
-  $targetDir = "uploads/"; // Directory where images will be stored
+  $targetDir = "uploads/";
   $targetFile = $targetDir . basename($image["name"]);
   $imageFileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
 
-  // Check if image file is a actual image or fake image
+  // Check if the file is an actual image
   $check = getimagesize($image["tmp_name"]);
   if ($check === false) {
-    return false; // Not an image
+    return ["status" => "error", "message" => "File is not an image."];
   }
 
-  // Check file size (adjust as needed)
+  // Check file size (500KB limit)
   if ($image["size"] > 500000) {
-    return false; // File too large
+    return ["status" => "error", "message" => "Sorry, your file is too large. Max 500KB allowed."];
   }
 
   // Allow certain file formats
@@ -24,7 +23,7 @@ function uploadImage($image) {
     $imageFileType != "jpg" && $imageFileType != "png" &&
     $imageFileType != "jpeg" && $imageFileType != "gif"
   ) {
-    return false; // Invalid file type
+    return ["status" => "error", "message" => "Sorry, only JPG, JPEG, PNG & GIF files are allowed."];
   }
 
   // Create directory if it doesn't exist
@@ -32,28 +31,27 @@ function uploadImage($image) {
     mkdir($targetDir, 0777, true);
   }
 
-  // Try to upload file
+  // Attempt to move the uploaded file
   if (move_uploaded_file($image["tmp_name"], $targetFile)) {
-    return $targetFile; // Return the path to the uploaded image
+    return ["status" => "success", "filePath" => $targetFile]; // Return success status and file path
   } else {
-    return false; // Upload failed
+    return ["status" => "error", "message" => "Sorry, there was an error uploading your file."];
   }
 }
 
-// Pastikan metode yang digunakan adalah POST
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-  // Pastikan ada file yang diunggah
   if (isset($_FILES["image"])) {
     $uploadResult = uploadImage($_FILES["image"]);
 
-    if ($uploadResult !== false) {
-      // Ambil data dari body request
+    if ($uploadResult["status"] === "success") {
+      // Sanitize and escape input data
       $title = $conn->real_escape_string($_POST['title']);
       $id = $conn->real_escape_string($_POST['id']);
       $ingredients = $conn->real_escape_string($_POST['ingredients']);
       $steps = $conn->real_escape_string($_POST['steps']);
-      $image_url = $conn->real_escape_string($uploadResult); // Use the path from upload
+      $image_url = $conn->real_escape_string($uploadResult["filePath"]); // Use the file path from upload result
 
+      // Insert data into the database
       $sql = "INSERT INTO resep (title, id_user, ingredients, steps, image_url) VALUES ('$title', '$id', '$ingredients', '$steps', '$image_url')";
 
       if ($conn->query($sql) === TRUE) {
@@ -64,25 +62,26 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
       } else {
         echo json_encode([
           "status" => "error",
-          "message" => "Error: " . $conn->error
+          "message" => "Database Error: " . $conn->error
         ]);
       }
     } else {
+      // Return specific error message from upload function
       echo json_encode([
         "status" => "error",
-        "message" => "Failed to upload image"
+        "message" => $uploadResult["message"]
       ]);
     }
   } else {
     echo json_encode([
       "status" => "error",
-      "message" => "No image uploaded"
+      "message" => "No image uploaded."
     ]);
   }
 } else {
   echo json_encode([
     "status" => "error",
-    "message" => "Invalid request method"
+    "message" => "Invalid request method."
   ]);
 }
 

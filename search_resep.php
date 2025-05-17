@@ -1,14 +1,8 @@
 <?php
 header("Content-Type: application/json");
 require "config.php";
-
-// Ambil parameter pencarian dari query string (jika ada)
 $search = isset($_GET['search']) ? $_GET['search'] : "";
-
-// Amankan input agar tidak rentan terhadap SQL Injection
 $search = $conn->real_escape_string($search);
-
-// Buat query SQL
 $sql = "SELECT 
     r.id,
     r.title,

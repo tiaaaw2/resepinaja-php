@@ -1,8 +1,6 @@
 <?php
 header("Content-Type: application/json");
 require "config.php";
-
-// Pastikan metode yang digunakan adalah POST
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     // Ambil data dari body request
     $data = json_decode(file_get_contents("php://input"), true);
