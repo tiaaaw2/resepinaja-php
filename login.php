@@ -18,7 +18,7 @@ if (!isset($data['email'], $data['password'])) {
 $email = trim($data['email']);
 $password = trim($data['password']);
 
-$sql = "SELECT id, email, password FROM user WHERE email = ?";
+$sql = "SELECT id, email, password FROM user WHERE email = ? AND role = 'user'";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("s", $email);
 $stmt->execute();

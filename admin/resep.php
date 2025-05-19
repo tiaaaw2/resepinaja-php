@@ -1,3 +1,9 @@
+<?php
+    session_start();
+    if(empty($_SESSION['username'])){
+    header("location:login.php");  
+}
+?>
 <!DOCTYPE html>
 <html lang="id">
   <head>
@@ -70,6 +76,9 @@
           <div class="logo">Resepin-aja</div>
           <a href="index.php"><i class="bi bi-arrow-repeat"></i> Pending Resep</a>
           <a href="resep.php"><i class="bi bi-book"></i> Resep</a>
+          <a href="logout.php"><i class="bi bi-box-arrow-left"></i> Logout</a>
+
+
 
           <!-- <a href="#"><i class="bi bi-door-open"></i>Logout</a> -->
         </div>
