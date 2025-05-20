@@ -2,13 +2,13 @@
 header("Content-Type: application/json");
 require "config.php"; // File koneksi database
 function uploadImage($image, $maxWidth = null, $maxHeight = null) {
-    $targetDir = "uploads/"; // Directory where images will be stored
+    $targetDir = "uploads/"; 
     $targetFile = $targetDir . basename($image["name"]);
     $imageFileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));
 
     $check = getimagesize($image["tmp_name"]);
     if ($check === false) {
-        return false; // Not an image
+        return false;
     }
 
     if ($image["size"] > 5000000) { 
@@ -22,7 +22,7 @@ function uploadImage($image, $maxWidth = null, $maxHeight = null) {
         return false; 
     }
     if ($maxWidth !== null || $maxHeight !== null) {
-        list($width, $height) = $check; // Get actual image dimensions
+        list($width, $height) = $check; 
         if (($maxWidth !== null && $width > $maxWidth) || ($maxHeight !== null && $height > $maxHeight)) {
             return false;
         }

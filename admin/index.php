@@ -118,7 +118,7 @@
                   ?>
                     <td  ><?= $no++; ?></td>
                        <td>
-                        <img src="<?= htmlspecialchars('http://192.168.163.118/api-resep/' . $row['image_url']); ?>" alt="<?= htmlspecialchars($row['title']); ?>" class="img-fluid" style="max-width: 150px; height: 150px; object-fit: contain;" />
+                        <img src="<?= htmlspecialchars('http://192.168.96.118/api-resep/' . $row['image_url']); ?>" alt="<?= htmlspecialchars($row['title']); ?>" class="img-fluid" style="max-width: 150px; height: 150px; object-fit: contain;" />
                       </td>
                     <td><?= htmlspecialchars($row['title']); ?></td>
                     <td style="max-width: 200px; word-wrap: break-word; white-space: normal;"><?= nl2br(htmlspecialchars($row['ingredients'])); ?></td>
